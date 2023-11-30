@@ -36,7 +36,7 @@
                                 <td>{{ $item->stock }}</td>
                                 <td>Rp. {{ number_format($item->price, 2, '.', '.') }}</td>
                                 <td>
-                                    <a class="btn btn-sm btn-success" href="{{ route('transaction.add', $item->id) }}">
+                                    <a class="btn btn-sm btn-primary" href="{{ route('transaction.add', $item->id) }}">
                                         Add to cart
                                     </a>
                                 </td>
@@ -70,19 +70,31 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item['name'] }}</td>
 
-                                        <td>
-                                            <input class="form-control" type="number" value="{{ $item['qty'] }}">
-                                        </td>
+                                        <form action="{{ route('cart.update') }}" method="POST">
+                                            @csrf
 
-                                        <td>{{ number_format($item['subtotal'], 2, '.', '.') }}</td>
+                                            <input type="hidden" name="id" value="{{ $item['id'] }}">
+                                            <td>
+                                                <input onchange="ubah{{ $loop->iteration }}()" class="form-control" type="number" name="qty" id="qty" value="{{ $item['qty'] }}">
+                                            </td>
+                                            <td>{{ number_format($item['subtotal'], 2, '.', '.') }}</td>
 
-                                        <td>
-                                            <a href="{{ route('transaction.delete', $item['id']) }}" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Remove this Item?')">
-                                                Remove
-                                            </a>
-                                        </td>
+                                            <td>
+                                                <a id="delete{{ $loop->iteration }}" href="{{ route('transaction.delete', $item['id']) }}" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Remove this Item?')">
+                                                    Remove
+                                                </a>
+                                                <input id="update{{ $loop->iteration }}" style="display: none" type="submit" class="btn btn-sm btn-primary" value="Update">
+                                            </td>
 
+                                            <script>
+                                                function ubah{{ $loop->iteration }}() {
+                                                    $("#delete{{ $loop->iteration }}").hide();
+                                                    $("#update{{ $loop->iteration }}").show();
+                                                }
+                                            </script>
+
+                                        </form>
                                     </tr>
                                 @endforeach
 

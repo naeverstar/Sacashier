@@ -58,6 +58,16 @@ class TransactionController extends Controller
         return redirect()->back()->with('success', 'Successfully removed Item from Cart');
     }
 
+    public function cartUpdate(Request $request)
+    {
+        $cart = session('cart');
+
+        $cart[$request->id]["qty"] = $request->qty;
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', 'Successfully updated Cart');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
