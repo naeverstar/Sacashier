@@ -29,7 +29,7 @@ class TransactionController extends Controller
 
         if (isset($cart[$id])) {
             $cart[$id]['qty'] += 1;
-            $cart[$id]['subtotal'] == $item->price * $cart[$id]['qty'];
+            $cart[$id]['subtotal'] = $item->price * $cart[$id]['qty'];
         } else {
             $cart[$id] = [
                 "id"        => $item->id,
@@ -60,9 +60,12 @@ class TransactionController extends Controller
 
     public function cartUpdate(Request $request)
     {
+        $item = Item::findorfail($request->id);
         $cart = session('cart');
 
-        $cart[$request->id]["qty"] = $request->qty;
+        $cart[$request->id]['qty'] = $request->qty;
+        $cart[$request->id]['subtotal'] = $item->price * $request->qty;
+        // $cart[$request->id]['subtotal'] *= $cart[$request->id]['qty'];
         session()->put('cart', $cart);
 
         return redirect()->back()->with('success', 'Successfully updated Cart');

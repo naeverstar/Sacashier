@@ -65,7 +65,9 @@
                             </tr>
 
                             @if (session('cart'))
+                                @php $total = 0; @endphp
                                 @foreach (session('cart') as $item)
+                                    @php $total += $item['subtotal']; @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item['name'] }}</td>
@@ -98,6 +100,16 @@
                                     </tr>
                                 @endforeach
 
+                                <tr>
+                                    <td colspan="3" class="text-end">Grand Total</td>
+                                    <td colspan="2"><input type="text" class="form-control"
+                                            value="{{ number_format($total, 2, '.', '.') }}" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end">Payment</td>
+                                    <td colspan="2"><input type="text" class="form-control"></td>
+                                </tr>
+
                             @else
                                 <tr>
                                     <td colspan="5" class="text-center">
@@ -106,15 +118,6 @@
                                 </tr>
                             @endif
 
-                            <tr>
-                                <td colspan="3" class="text-end">Grand Total</td>
-                                <td colspan="2"><input type="text" class="form-control"
-                                        value="{{ number_format(150000, 2, '.', '.') }}" readonly></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" class="text-end">Payment</td>
-                                <td colspan="2"><input type="text" class="form-control"></td>
-                            </tr>
 
                         </table>
 
