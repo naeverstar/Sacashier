@@ -34,10 +34,12 @@ class CategoryController extends Controller
             'required'  => ':attribute need to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
+            'regex'     => 'The :attribute should only contain words and spaces',
+            'unique'    => 'name is already in the list',
         ];
 
         $validationData = $request->validate([
-            'name' => 'required|min:2|max:20'
+            'name' => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:categories'
         ], $message);
 
         Category::create($validationData);
@@ -72,10 +74,12 @@ class CategoryController extends Controller
             'required'  => ':attribute need to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
+            'regex'     => 'The :attribute should only contain words and spaces',
+            'unique'    => 'name is already in the list',
         ];
 
         $validationData = $request->validate([
-            'name' => 'required|min:2|max:20'
+            'name' => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:categories'
         ], $message);
 
         Category::where('id', $category->id)->update($validationData);

@@ -37,13 +37,16 @@ class ItemController extends Controller
             'required'  => ':attribute need to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
+            'price.min' => ':attribute minimum rp:min',
+            'stock.min' => ':attribute minimum :min',
+            'unique'    => 'name is already in the list',
         ];
 
         $validationData = $request->validate([
             'category_id'   => 'required',
-            'name'          => 'required|min:2|max:20',
-            'price'         => 'required',
-            'stock'         => 'required',
+            'name'          => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:items',
+            'price'         => 'required|integer|min:100',
+            'stock'         => 'required|integer|min:1',
         ], $message);
 
         Item::create($validationData);
@@ -77,14 +80,17 @@ class ItemController extends Controller
             'required'  => ':attribute need to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
+            'price.min' => ':attribute minimum rp:min',
+            'stock.min' => ':attribute minimum :min',
+            'unique'    => 'name is already in the list',
         ];
 
         $validationData = $request->validate([
             'category_id'   => 'required',
-            'name'          => 'required|min:2|max:20',
-            'price'         => 'required',
-            'stock'         => 'required',
-        ], $message);
+            'name'          => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:items',
+            'price'         => 'required|integer|min:100',
+            'stock'         => 'required|integer|min:1',
+     ], $message);
 
         Item::where('id', $item->id)->update($validationData);
 

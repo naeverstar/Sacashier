@@ -63,10 +63,15 @@ class TransactionController extends Controller
         $item = Item::findorfail($request->id);
         $cart = session('cart');
 
-        $cart[$request->id]['qty'] = $request->qty;
-        $cart[$request->id]['subtotal'] = $item->price * $request->qty;
-        // $cart[$request->id]['subtotal'] *= $cart[$request->id]['qty'];
-        session()->put('cart', $cart);
+        if ($request->qty > 0) {
+            $cart[$request->id]['qty'] = $request->qty;
+            $cart[$request->id]['subtotal'] = $item->price * $request->qty;
+            // $cart[$request->id]['subtotal'] *= $cart[$request->id]['qty'];
+            session()->put('cart', $cart);
+        } else {
+            $this->delete($request->id);
+        }
+
 
         return redirect()->back()->with('success', 'Successfully updated Cart');
     }
