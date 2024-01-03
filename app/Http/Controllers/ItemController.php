@@ -34,12 +34,12 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $message = [
-            'required'  => ':attribute need to be filled',
+            'required'  => ':attribute needs to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
             'price.min' => ':attribute minimum rp:min',
             'stock.min' => ':attribute minimum :min',
-            'unique'    => 'name is already in the list',
+            'unique'    => ':attribute is already in the list',
         ];
 
         $validationData = $request->validate([
@@ -82,12 +82,12 @@ class ItemController extends Controller
             'max'       => ':attribute maximal :max character',
             'price.min' => ':attribute minimum rp:min',
             'stock.min' => ':attribute minimum :min',
-            'unique'    => 'name is already in the list',
+            'unique'    => ':attribute is already in the list',
         ];
 
         $validationData = $request->validate([
             'category_id'   => 'required',
-            'name'          => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:items',
+            'name'          => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/',
             'price'         => 'required|integer|min:100',
             'stock'         => 'required|integer|min:1',
      ], $message);

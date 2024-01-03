@@ -31,11 +31,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $message = [
-            'required'  => ':attribute need to be filled',
+            'required'  => ':attribute needs to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
-            'regex'     => 'The :attribute should only contain words and spaces',
-            'unique'    => 'name is already in the list',
+            'regex'     => ':attribute should only contain words and spaces',
+            'unique'    => ':attribute is already in the list',
         ];
 
         $validationData = $request->validate([
@@ -71,11 +71,11 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $message = [
-            'required'  => ':attribute need to be filled',
+            'required'  => ':attribute needs to be filled',
             'min'       => ':attribute minimum :min character',
             'max'       => ':attribute maximal :max character',
-            'regex'     => 'The :attribute should only contain words and spaces',
-            'unique'    => 'name is already in the list',
+            'regex'     => ':attribute should only contain words and spaces',
+            'unique'    => ':attribute is already in the list',
         ];
 
         $validationData = $request->validate([
