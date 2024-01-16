@@ -46,7 +46,7 @@ class ItemController extends Controller
             'category_id'   => 'required',
             'name'          => 'required|min:2|max:20|regex:/^[a-zA-Z ]+$/|unique:items',
             'price'         => 'required|integer|min:100',
-            'stock'         => 'required|integer|min:1',
+            'stock'         => 'required|integer|min:0',
         ], $message);
 
         Item::create($validationData);

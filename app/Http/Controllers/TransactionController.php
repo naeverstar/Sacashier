@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
+// use Carbon\Carbon;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -89,7 +93,31 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Transaction::create([
+            'user_id'   => Auth::id(),
+            'date'      => Carbon::now(),
+            'total'     => (int)$request->total,
+            'pay_total' => $request->pay_total,
+        ]);
+
+
+        $items = session('cart');
+
+        // $pay_total = $request->pay_total;
+        // dd($pay_total);
+
+        foreach($items as $item) {
+            TransactionDetail::create([
+                'transaction_id' => Transaction::latest()->first()->id,
+                'item_id'        => $item['id'],
+                'qty'            => $item['qty'],
+                'subtotal'       => $item['subtotal'],
+            ]);
+        }
+
+        session()->forget('cart');
+        return redirect()->route('transaction.show', Transaction::latest()->first()->id)
+            ->with('success', 'Checkout is Successful');
     }
 
     /**
@@ -97,7 +125,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return view('invoice', compact('transaction'));
     }
 
     /**
