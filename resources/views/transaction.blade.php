@@ -12,6 +12,13 @@
                 </div>
             @endif
 
+            @if (Session::has('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{ session::get('error') }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="col-lg-7 mb-4">
                 <div class="card">
                     <div class="card-header">

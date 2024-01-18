@@ -60,24 +60,25 @@
         }
     </style>
 </head>
-<body>
+<body onload="printout()">
     <div class="container">
         <div class="header" style="margin-bottom: 30px;">
-            <h2>Toko Smesa</h2>
-            <small> Jl. Smea No. 4, Wonokromo, Surabaya, Jawa Timur</small>
+            <h1>Toko Siwalayan Nawa</h1>
+            <h2>Nomor Pesanan: {{ $transaction->id }} </h2>
+            <small> Jl. Ketintang, Surabaya, Jawa Timur</small>
         </div>
         <hr>
         <div class="flex-container-1">
             <div class="left">
                 <ul>
-                    <li>No Order</li>
+                    {{-- <li>No Order</li> --}}
                     <li>Kasir</li>
                     <li>Tanggal</li>
                 </ul>
             </div>
             <div class="right">
                 <ul>
-                    <li> {{ $transaction->id }} </li>
+                    {{-- <li> {{ $transaction->id }} </li> --}}
                     <li> {{ $transaction->getUser->name }} </li>
                     <li> {{ date('d-m-Y', strtotime($transaction->date)) }} </li>
                 </ul>
@@ -120,4 +121,16 @@
         </div>
     </div>
 </body>
+
+<script>
+    function printout() {
+        window.print();
+        setTimeout("self.close()",1000)
+    }
+
+    window.onafterprint =  function(e){
+        window.location.href = '{{ route('transaction.index') }}'
+    }
+</script>
+
 </html>

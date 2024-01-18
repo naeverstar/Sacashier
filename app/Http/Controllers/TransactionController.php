@@ -18,7 +18,10 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $items = Item::all();
+        // item with 0 stock will not be shown
+        $items = Item::where('stock', '>' , 0)->get();
+
+        // $items = Item::all();
         // session()->flush();
         return view('transaction', compact('items'));
     }
@@ -35,12 +38,16 @@ class TransactionController extends Controller
             $cart[$id]['qty'] += 1;
             $cart[$id]['subtotal'] = $item->price * $cart[$id]['qty'];
         } else {
-            $cart[$id] = [
-                "id"        => $item->id,
-                "name"      => $item->name,
-                "qty"       => 1,
-                "subtotal"  => $item->price,
-            ];
+            if($item->stock > 0) {
+                $cart[$id] = [
+                    "id"        => $item->id,
+                    "name"      => $item->name,
+                    "qty"       => 1,
+                    "subtotal"  => $item->price,
+                ];
+            } else {
+                return redirect()->back()->with('error', 'Stock Item is Empty');
+            }
         }
 
         session()->put('cart', $cart);
@@ -68,14 +75,18 @@ class TransactionController extends Controller
         $cart = session('cart');
 
         if ($request->qty > 0) {
-            $cart[$request->id]['qty'] = $request->qty;
-            $cart[$request->id]['subtotal'] = $item->price * $request->qty;
-            // $cart[$request->id]['subtotal'] *= $cart[$request->id]['qty'];
-            session()->put('cart', $cart);
+            if($request->qty <= $item->stock) {
+                $cart[$request->id]['qty'] = $request->qty;
+                $cart[$request->id]['subtotal'] = $item->price * $request->qty;
+                // $cart[$request->id]['subtotal'] *= $cart[$request->id]['qty'];
+                session()->put('cart', $cart);
+            } else {
+                return redirect()->back()->with('error', 'Item Quantity is more than Stock');
+                // no popup bc blade
+            }
         } else {
             $this->delete($request->id);
         }
-
 
         return redirect()->back()->with('success', 'Successfully updated Cart');
     }
@@ -113,7 +124,15 @@ class TransactionController extends Controller
                 'qty'            => $item['qty'],
                 'subtotal'       => $item['subtotal'],
             ]);
+
+            $product = Item::find($item['id']);
+            $stock   = $product->stock - $item['qty'];
+            $product->update(['stock' => $stock]);
         }
+
+        // if ($request->total > $request->pay_total) {
+        //     return redirect()->route('transaction.show', Transaction::latest()->first()->id);
+        // }
 
         session()->forget('cart');
         return redirect()->route('transaction.show', Transaction::latest()->first()->id)
